@@ -18,7 +18,6 @@ class CreateBooksTable extends Migration
             $table->string('name')->unique();
             $table->string('writer');
             $table->string('publication');
-            $table->timestamp('publication_date');
             $table->timestamps();
             $table->softDeletes('deleted_at');
         });

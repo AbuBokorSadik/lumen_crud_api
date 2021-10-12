@@ -17,4 +17,10 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-$route->get('book-list','');
+$router->group(['prefix' => 'api/v1', 'namespace' => 'API\\V1\\Book'], function() use($router){
+    $router->get('books', ['uses' => 'BookController@index']);
+    $router->post('books', ['uses' => 'BookController@create']);
+    $router->put('books/{id}', ['uses' => 'BookController@update']);
+    $router->delete('books/{id}', ['uses' => 'BookController@delete']);
+
+});
