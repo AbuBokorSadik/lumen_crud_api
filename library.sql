@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Oct 12, 2021 at 12:56 PM
--- Server version: 8.0.26-0ubuntu0.20.04.2
+-- Generation Time: Oct 13, 2021 at 10:53 AM
+-- Server version: 8.0.26-0ubuntu0.20.04.3
 -- PHP Version: 7.4.24
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -43,14 +43,13 @@ CREATE TABLE `books` (
 --
 
 INSERT INTO `books` (`id`, `name`, `writer`, `publication`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'ure jaye boko pokkhi', 'Humayun Ahmed', 'Anondo', '2021-10-12 10:39:53', '2021-10-12 11:33:21', '2021-10-12 11:33:21'),
-(3, 'Da Vinci Code', 'Dan Brown', 'Doubleday', '2021-10-12 11:28:18', '2021-10-12 11:35:18', '2021-10-12 11:35:18'),
-(6, 'Da Vinci Code 1', 'Dan Brown', 'Doubleday', '2021-10-12 11:35:07', '2021-10-12 11:35:07', NULL),
-(8, 'Da Vinci Code 2', 'Dan Brown', 'Doubleday', '2021-10-12 11:38:17', '2021-10-12 11:38:17', NULL),
-(11, 'ure jaye boko pokkh', 'Humayun Ahmed', 'Anondo', '2021-10-12 12:11:02', '2021-10-12 12:54:59', '2021-10-12 12:54:59'),
-(12, 'Da Vinci Code 5', 'Dan Brown', 'Doubleday', '2021-10-12 12:12:09', '2021-10-12 12:12:09', NULL),
-(16, 'Da Vinci Code 7', 'Dan Brown', 'Doubleday', '2021-10-12 12:13:42', '2021-10-12 12:13:42', NULL),
-(25, 'Da Vinci Cod', 'Dan Brown', 'Doubleday', '2021-10-12 12:52:42', '2021-10-12 12:52:42', NULL);
+(1, 'Harry Potter 1', 'JK Rowling', 'Bloomsbury Publishing', '2021-10-13 10:05:03', '2021-10-13 10:26:33', NULL),
+(2, 'Harry Potter 2', 'JK Rowling', 'Bloomsbury Publishing', '2021-10-13 10:05:08', '2021-10-13 10:05:08', NULL),
+(3, 'Harry Potter 3', 'JK Rowling', 'Bloomsbury Publishing', '2021-10-13 10:05:12', '2021-10-13 10:05:12', NULL),
+(4, 'Harry Potter 4', 'JK Rowling', 'Bloomsbury Publishing', '2021-10-13 10:05:16', '2021-10-13 10:05:16', NULL),
+(5, 'Harry Potter 5', 'JK Rowling', 'Bloomsbury Publishing', '2021-10-13 10:05:19', '2021-10-13 10:05:19', NULL),
+(6, 'Harry Potter 6', 'JK Rowling', 'Bloomsbury Publishing', '2021-10-13 10:05:22', '2021-10-13 10:05:22', NULL),
+(7, 'Harry Potter 7', 'JK Rowling', 'Bloomsbury Publishing', '2021-10-13 10:05:26', '2021-10-13 10:29:48', '2021-10-13 10:29:48');
 
 -- --------------------------------------------------------
 
@@ -96,7 +95,7 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT for table `books`
 --
 ALTER TABLE `books`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `migrations`

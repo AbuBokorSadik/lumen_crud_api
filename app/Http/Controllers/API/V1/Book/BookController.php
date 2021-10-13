@@ -3,33 +3,28 @@
 namespace App\Http\Controllers\API\v1\Book;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\BookStoreRequest;
 use App\Models\Book;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
+use App\Traits\ApiResponseTraits;
 
 class BookController extends Controller
 {
+    use ApiResponseTraits;
+
     public function index()
     {
         try {
             $book = Book::paginate(15);
 
-            return response()->json([
-                'code' => 200,
-                'messages' => ['success'],
-                'data' => $book,
-            ]);
+            return $this->respondInJSON(200, ['success'], $book);
         } catch (\Exception $e) {
             Log::error($e->getFile() . ' ' . $e->getLine() . ' ' . $e->getMessage());
 
-            return response()->json([
-                'code' => 500,
-                'messages' => ['Failed'],
-                'data' => null
-            ], 500);
+            return $this->failedResponse(500, ['Failed'], null);
         }
     }
 
@@ -52,35 +47,15 @@ class BookController extends Controller
                 'publication' => $request->publication
             ]);
 
-            return response()->json([
-                'code' => 200,
-                'messages' => ['success'],
-                'data' => $book,
-            ]);
+            return $this->respondInJSON(200, ['success'], $book);
         } catch (ValidationException $e) {
             Log::error($e->getFile() . ' ' . $e->getLine() . ' ' . $e->getMessage());
 
-            $error_msg = [];
-            // echo '<pre>';
-            // print_r($e->errors());
-            // exit();
-            foreach($e->errors() as $key => $msg){
-                $error_msg[] = $msg[0];
-            }
-
-            return response()->json([
-                'code' => 422,
-                'messages' => $error_msg,
-                'data' => null
-            ], 422);
+            return $this->failedResponse(422, [], $e, true);
         } catch (\Exception $e) {
             Log::error($e->getFile() . ' ' . $e->getLine() . ' ' . $e->getMessage());
 
-            return response()->json([
-                'code' => 500,
-                'messages' => [$e->getMessage()],
-                'data' => null
-            ], 500);
+            return $this->failedResponse(500, ['Failed'], null);
         }
     }
 
@@ -88,24 +63,35 @@ class BookController extends Controller
     {
         try {
             $book = Book::find($id);
+
+            if(!$book){
+                return $this->failedResponse(404, ['Book not found'], null);
+            }
+
+            $validation = Validator::make($request->all(), [
+                'name' => ['required', Rule::unique('books', 'name')->ignore($book->id)],
+                'writer' => 'required',
+                'publication' => 'required',
+            ]);
+
+            if ($validation->fails()) {
+                throw new ValidationException($validation);
+            }
+
             $book->name = $request->name;
             $book->writer = $request->writer;
             $book->publication = $request->publication;
             $book->save();
 
-            return response()->json([
-                'code' => 200,
-                'messages' => ['success'],
-                'data' => $book,
-            ]);
+            return $this->respondInJSON(200, ['success'], $book);
+        } catch (ValidationException $e) {
+            Log::error($e->getFile() . ' ' . $e->getLine() . ' ' . $e->getMessage());
+
+            return $this->failedResponse(422, [], $e, true);
         } catch (\Exception $e) {
             Log::error($e->getFile() . ' ' . $e->getLine() . ' ' . $e->getMessage());
 
-            return response()->json([
-                'code' => 500,
-                'messages' => [$e->getMessage()],
-                'data' => null
-            ], 500);
+            return $this->failedResponse(500, ['Failed'], null);
         }
     }
 
@@ -113,20 +99,18 @@ class BookController extends Controller
     {
         try {
             $book = Book::find($id);
+
+            if(!$book){
+                return $this->failedResponse(404, ['Book not found'], null);
+            }
+            
             $book->delete();
 
-            return response()->json([
-                'code' => 200,
-                'messages' => ['success'],
-                'data' => $book,
-            ]);
+            return $this->respondInJSON(200, ['success'], $book);
         } catch (\Exception $e) {
             Log::error($e->getFile() . ' ' . $e->getLine() . ' ' . $e->getMessage());
-            return response()->json([
-                'code' => 500,
-                'messages' => [$e->getMessage()],
-                'data' => null
-            ], 500);
+
+            return $this->failedResponse(500, ['Failed'], null);
         }
     }
 }
