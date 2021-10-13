@@ -7,6 +7,8 @@ use App\Http\Requests\BookStoreRequest;
 use App\Models\Book;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class BookController extends Controller
 {
@@ -31,9 +33,19 @@ class BookController extends Controller
         }
     }
 
-    public function create(BookStoreRequest $request)
+    public function create(Request $request)
     {
         try {
+            $validation = Validator::make($request->all(), [
+                'name' => 'required|unique:books',
+                'writer' => 'required',
+                'publication' => 'required',
+            ]);
+
+            if ($validation->fails()) {
+                throw new ValidationException($validation);
+            }
+
             $book = Book::create([
                 'name' => $request->name,
                 'writer' => $request->writer,
@@ -45,6 +57,22 @@ class BookController extends Controller
                 'messages' => ['success'],
                 'data' => $book,
             ]);
+        } catch (ValidationException $e) {
+            Log::error($e->getFile() . ' ' . $e->getLine() . ' ' . $e->getMessage());
+
+            $error_msg = [];
+            // echo '<pre>';
+            // print_r($e->errors());
+            // exit();
+            foreach($e->errors() as $key => $msg){
+                $error_msg[] = $msg[0];
+            }
+
+            return response()->json([
+                'code' => 422,
+                'messages' => $error_msg,
+                'data' => null
+            ], 422);
         } catch (\Exception $e) {
             Log::error($e->getFile() . ' ' . $e->getLine() . ' ' . $e->getMessage());
 
